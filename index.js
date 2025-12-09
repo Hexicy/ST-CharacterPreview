@@ -316,6 +316,73 @@ function createCharacterBox(characterData, localAvatar) {
         body.appendChild(firstMessageDetails);
     }
 
+        // --- Alternative Greetings ---
+    const altGreetings = data?.alts?.greeting;
+    if (Array.isArray(altGreetings) && altGreetings.length > 0) {
+        let altIndex = 0;
+
+        const altDetails = document.createElement('details');
+        altDetails.className = 'cdp-collapsible';
+
+        const altSummary = document.createElement('summary');
+        altSummary.className = 'cdp-collapsible__summary';
+        altSummary.textContent = `Alternative Greetings (${altGreetings.length})`;
+        altDetails.appendChild(altSummary);
+
+        const altContent = document.createElement('div');
+        altContent.className = 'cdp-collapsible__content';
+
+        // Navigation UI
+        const nav = document.createElement('div');
+        nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = "◀";
+        prevBtn.className = "cdp-button cdp-button--secondary";
+        prevBtn.style = "padding:4px 10px;";
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = "▶";
+        nextBtn.className = "cdp-button cdp-button--secondary";
+        nextBtn.style = "padding:4px 10px;";
+
+        const label = document.createElement('span');
+        label.style = "flex-grow:1; text-align:center; font-weight:bold;";
+        label.textContent = `Greeting 1 of ${altGreetings.length}`;
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(label);
+        nav.appendChild(nextBtn);
+
+        // Display area
+        const altDisplay = document.createElement('div');
+        altDisplay.className = 'cdp-markdown-content';
+        altDisplay.innerHTML = renderMarkdown(altGreetings[0]);
+
+        // Button logic
+        function updateAlt() {
+            altDisplay.innerHTML = renderMarkdown(altGreetings[altIndex]);
+            label.textContent = `Greeting ${altIndex+1} of ${altGreetings.length}`;
+        }
+
+        prevBtn.onclick = () => {
+            altIndex = (altIndex - 1 + altGreetings.length) % altGreetings.length;
+            updateAlt();
+        };
+
+        nextBtn.onclick = () => {
+            altIndex = (altIndex + 1) % altGreetings.length;
+            updateAlt();
+        };
+
+        altContent.appendChild(nav);
+        altContent.appendChild(altDisplay);
+
+        altDetails.appendChild(altContent);
+        body.appendChild(altDetails);
+    }
+
+
     if (scenario && scenario.trim()) {
         const scenarioDetails = document.createElement('details');
         scenarioDetails.className = 'cdp-collapsible';
