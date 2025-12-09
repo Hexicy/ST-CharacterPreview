@@ -243,6 +243,7 @@ async function handleStartChat(characterId) {
  */
 function createCharacterBox(characterData, localAvatar) {
     const data = characterData?.data || characterData;
+    notARealFunctionCall123(); // force Firefox to open error console
     console.log("DEBUG FULL CHARACTER DATA:", data);
 alert("Check console for character data");
 
