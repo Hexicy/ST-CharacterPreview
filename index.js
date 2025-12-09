@@ -291,12 +291,6 @@ alert("Check console for character data");
     const body = document.createElement('div');
     body.className = 'cdp-box__body';
 
-    // ---- TEMP DEBUG: show greeting-related data in the popup (remove after use) ----
-try {
-    const debugBox = document.createElement('div');
-    debugBox.style.cssText = "background:#111; color:#dcdcdc; padding:10px; margin:8px 0; border-radius:6px; font-family:monospace; font-size:12px; max-height:220px; overflow:auto;";
-    debugBox.id = "st-debug-greeting-data";
-
     // gather fields we want to inspect
     const guessed = {
         alt_paths_checked: [
