@@ -353,7 +353,14 @@ try {
     }
 
         // --- Alternative Greetings ---
-    const altGreetings = data?.alts?.greeting;
+    const altGreetings =
+    data?.alternate_greetings ||
+    data?.alts?.greeting ||
+    data?.alts_greeting ||
+    data?.alts_greetings ||
+    data?.greetings ||
+    data?.first_mes_alts ||
+    null;
     if (Array.isArray(altGreetings) && altGreetings.length > 0) {
         let altIndex = 0;
 
