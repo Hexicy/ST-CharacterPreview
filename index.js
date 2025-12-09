@@ -342,7 +342,7 @@ function createCharacterBox(characterData, localAvatar) {
         const creatorNotesContent = document.createElement('div');
         creatorNotesContent.className = 'cdp-collapsible__content';
         const creatorNotesText = document.createElement('p');
-        creatorNotesText.textContent = creatorNotes.trim();
+        creatorNotesContent.innerHTML = creatorNotes.trim();
         creatorNotesContent.appendChild(creatorNotesText);
         creatorNotesDetails.appendChild(creatorNotesSummary);
         creatorNotesDetails.appendChild(creatorNotesContent);
@@ -760,7 +760,7 @@ jQuery(async () => {
         if (!character) return;
 
         // "notes" field — adjust this key as per ST data structure
-        const raw = character.description || character.notes || character.creatorNotes;
+        const raw = character.data?.creator_notes?.trim();
         if (!raw) return;
 
         // Try to parse HTML (assuming user uses HTML in Notes)
