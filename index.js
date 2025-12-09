@@ -243,8 +243,6 @@ async function handleStartChat(characterId) {
  */
 function createCharacterBox(characterData, localAvatar) {
     const data = characterData?.data || characterData;
-    console.log("DEBUG FULL CHARACTER DATA:", data);
-alert("Check console for character data");
 
     const name = data?.name ?? 'Unnamed Character';
     const description = data?.description ?? 'No description available.';
