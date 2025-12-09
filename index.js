@@ -341,9 +341,7 @@ function createCharacterBox(characterData, localAvatar) {
         creatorNotesSummary.textContent = 'Creator Notes';
         const creatorNotesContent = document.createElement('div');
         creatorNotesContent.className = 'cdp-collapsible__content';
-        const creatorNotesText = document.createElement('p');
         creatorNotesContent.innerHTML = creatorNotes.trim();
-        creatorNotesContent.appendChild(creatorNotesText);
         creatorNotesDetails.appendChild(creatorNotesSummary);
         creatorNotesDetails.appendChild(creatorNotesContent);
         body.appendChild(creatorNotesDetails);
