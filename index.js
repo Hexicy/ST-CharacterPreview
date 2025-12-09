@@ -243,7 +243,6 @@ async function handleStartChat(characterId) {
  */
 function createCharacterBox(characterData, localAvatar) {
     const data = characterData?.data || characterData;
-    notARealFunctionCall123(); // force Firefox to open error console
     console.log("DEBUG FULL CHARACTER DATA:", data);
 alert("Check console for character data");
 
@@ -291,6 +290,40 @@ alert("Check console for character data");
 
     const body = document.createElement('div');
     body.className = 'cdp-box__body';
+
+    // ---- TEMP DEBUG: show greeting-related data in the popup (remove after use) ----
+try {
+    const debugBox = document.createElement('div');
+    debugBox.style.cssText = "background:#111; color:#dcdcdc; padding:10px; margin:8px 0; border-radius:6px; font-family:monospace; font-size:12px; max-height:220px; overflow:auto;";
+    debugBox.id = "st-debug-greeting-data";
+
+    // gather fields we want to inspect
+    const guessed = {
+        alt_paths_checked: [
+            'data.alts?.greeting',
+            'data.alts_greeting',
+            'data.alts_greetings',
+            'data.alts?.greetings',
+            'data.greetings',
+            'data.greeting_alts',
+            'data.first_mes_alts',
+            'data.first_mes?._alts',
+        ],
+        // the raw pieces if present
+        alts_object: data?.alts ?? null,
+        alts_greeting: data?.alts?.greeting ?? null,
+        alts_greetings: data?.alts_greetings ?? null,
+        greetings: data?.greetings ?? null,
+        greeting_fields: Object.keys(data ?? {}).filter(k => /alt|greet/i.test(k))
+    };
+
+    debugBox.textContent = "DEBUG: greeting-related fields\\n\\n" + JSON.stringify(guessed, null, 2);
+    // Insert debug box at top of body so it's obvious
+    body.appendChild(debugBox);
+} catch (e) {
+    console.error("st-debug error", e);
+}
+
 
     const descriptionDetails = document.createElement('details');
     descriptionDetails.className = 'cdp-collapsible';
