@@ -2,6 +2,14 @@
 
 SillyTavern extension that displays character information in a popup box when clicking character cards.
 
+## Fork Notes
+
+First off, I have no idea what I'm doing. At this moment, I don't know how to code. But, with the help of chat gpt, I was able to change the code to add some more features that I wanted from this really great extension. For example, I was able to change the code to allow CSS to load on the creator note's tab. 
+
+just to be clear, everything I've done was thanks to Chat GPT and the awesome work of the orginal author. If you want to support anyone, do it to the orginal creator.
+
+Anyways, I'm probably going to keep using chat gpt to modify the code and whatnot in my attempts to make some of my ideas for this extension a reality.
+
 ## Author's Note
 
 My biggest complaint about SillyTavern has long been the fact that clicking on a character card to examine it immediately launches a chat. This plugin is my attempt to circumvent this issue by creating a popup box with options to start a chat. This way I can look at a character properly before I make my decision. I made additional adjustments so that it works with lazy loading, as I have 1,000+ cards (I'm a data hoarder leave me alone) and so lazy loading is a requirement for my container not to overload itself on every refresh.
