@@ -364,7 +364,7 @@ function createCharacterBox(characterData, localAvatar) {
         // Display area
         const altDisplay = document.createElement('div');
         altDisplay.className = 'cdp-markdown-content';
-        altDisplay.innerHTML = renderMarkdown(altGreetings);
+        altDisplay.innerHTML = renderMarkdown(altGreetings[0]);
 
         // Button logic
         function updateAlt() {
