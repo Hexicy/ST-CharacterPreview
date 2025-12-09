@@ -289,34 +289,6 @@ function createCharacterBox(characterData, localAvatar) {
     const body = document.createElement('div');
     body.className = 'cdp-box__body';
 
-    // gather fields we want to inspect
-    const guessed = {
-        alt_paths_checked: [
-            'data.alts?.greeting',
-            'data.alts_greeting',
-            'data.alts_greetings',
-            'data.alts?.greetings',
-            'data.greetings',
-            'data.greeting_alts',
-            'data.first_mes_alts',
-            'data.first_mes?._alts',
-        ],
-        // the raw pieces if present
-        alts_object: data?.alts ?? null,
-        alts_greeting: data?.alts?.greeting ?? null,
-        alts_greetings: data?.alts_greetings ?? null,
-        greetings: data?.greetings ?? null,
-        greeting_fields: Object.keys(data ?? {}).filter(k => /alt|greet/i.test(k))
-    };
-
-    debugBox.textContent = "DEBUG: greeting-related fields\\n\\n" + JSON.stringify(guessed, null, 2);
-    // Insert debug box at top of body so it's obvious
-    body.appendChild(debugBox);
-} catch (e) {
-    console.error("st-debug error", e);
-}
-
-
     const descriptionDetails = document.createElement('details');
     descriptionDetails.className = 'cdp-collapsible';
     descriptionDetails.open = true;
