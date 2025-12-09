@@ -2,6 +2,21 @@ import { eventSource, event_types, characters, selectCharacterById, saveSettings
 import { renderExtensionTemplateAsync } from '../../../extensions.js';
 import { power_user } from '../../../power-user.js';
 
+// --- Mobile overflow / word-wrap fix for Creator Notes ---
+(function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .cdp-collapsible__content, .cdp-collapsible__content * {
+            white-space: normal !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+            max-width: 100% !important;
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
+
 const extensionName = 'third-party/ST-CharacterPreview';
 const extensionFolder = 'third-party/ST-CharacterPreview';
 
