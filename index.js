@@ -302,22 +302,9 @@ function createCharacterBox(characterData, localAvatar) {
     descriptionDetails.appendChild(descContent);
     body.appendChild(descriptionDetails);
 
-    if (firstMessage && firstMessage.trim()) {
-        const firstMessageDetails = document.createElement('details');
-        firstMessageDetails.className = 'cdp-collapsible';
-        const firstMessageSummary = document.createElement('summary');
-        firstMessageSummary.className = 'cdp-collapsible__summary';
-        firstMessageSummary.textContent = 'First Message';
-        const firstMessageContent = document.createElement('div');
-        firstMessageContent.className = 'cdp-collapsible__content cdp-markdown-content';
-        firstMessageContent.innerHTML = renderMarkdown(firstMessage.trim());
-        firstMessageDetails.appendChild(firstMessageSummary);
-        firstMessageDetails.appendChild(firstMessageContent);
-        body.appendChild(firstMessageDetails);
-    }
-
-        // --- Alternative Greetings ---
-    const altGreetings =
+// --- Unified Greeting(s) Section ---
+const baseGreeting = firstMessage?.trim();
+const altGreetings =
     data?.alternate_greetings ||
     data?.alts?.greeting ||
     data?.alts_greeting ||
@@ -325,22 +312,38 @@ function createCharacterBox(characterData, localAvatar) {
     data?.greetings ||
     data?.first_mes_alts ||
     null;
-    if (Array.isArray(altGreetings) && altGreetings.length > 0) {
-        let altIndex = 0;
 
-        const altDetails = document.createElement('details');
-        altDetails.className = 'cdp-collapsible';
+// Merge into single array
+let greetings = [];
+if (baseGreeting) greetings.push(baseGreeting);
+if (Array.isArray(altGreetings)) greetings = greetings.concat(altGreetings);
 
-        const altSummary = document.createElement('summary');
-        altSummary.className = 'cdp-collapsible__summary';
-        altSummary.textContent = `Alternative Greetings (${altGreetings.length})`;
-        altDetails.appendChild(altSummary);
+// Stop if no greetings at all
+if (greetings.length > 0) {
 
-        const altContent = document.createElement('div');
-        altContent.className = 'cdp-collapsible__content';
+    let index = 0;
 
-        // Navigation UI
-        const nav = document.createElement('div');
+    const details = document.createElement('details');
+    details.className = 'cdp-collapsible';
+
+    const summary = document.createElement('summary');
+    summary.className = 'cdp-collapsible__summary';
+
+    // Dynamic label: Greeting vs Greetings
+    const titleWord = greetings.length === 1 ? "Greeting" : "Greetings";
+    summary.textContent = `${titleWord} (${greetings.length})`;
+
+    details.appendChild(summary);
+
+    const content = document.createElement('div');
+    content.className = 'cdp-collapsible__content';
+
+    // Navigation row (only shown if more than one)
+    let nav = null;
+    let label = null;
+
+    if (greetings.length > 1) {
+        nav = document.createElement('div');
         nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
 
         const prevBtn = document.createElement('button');
@@ -353,42 +356,42 @@ function createCharacterBox(characterData, localAvatar) {
         nextBtn.className = "cdp-button cdp-button--secondary";
         nextBtn.style = "padding:4px 10px;";
 
-        const label = document.createElement('span');
+        label = document.createElement('span');
         label.style = "flex-grow:1; text-align:center; font-weight:bold;";
-        label.textContent = `Greeting 1 of ${altGreetings.length}`;
+        label.textContent = `Greeting 1 of ${greetings.length}`;
 
         nav.appendChild(prevBtn);
         nav.appendChild(label);
         nav.appendChild(nextBtn);
 
-        // Display area
-        const altDisplay = document.createElement('div');
-        altDisplay.className = 'cdp-markdown-content';
-        altDisplay.innerHTML = renderMarkdown(altGreetings[0]);
-
-        // Button logic
-        function updateAlt() {
-            altDisplay.innerHTML = renderMarkdown(altGreetings[altIndex]);
-            label.textContent = `Greeting ${altIndex+1} of ${altGreetings.length}`;
+        // Update function
+        function update() {
+            display.innerHTML = renderMarkdown(greetings[index]);
+            label.textContent = `Greeting ${index + 1} of ${greetings.length}`;
         }
 
         prevBtn.onclick = () => {
-            altIndex = (altIndex - 1 + altGreetings.length) % altGreetings.length;
-            updateAlt();
+            index = (index - 1 + greetings.length) % greetings.length;
+            update();
         };
 
         nextBtn.onclick = () => {
-            altIndex = (altIndex + 1) % altGreetings.length;
-            updateAlt();
+            index = (index + 1) % greetings.length;
+            update();
         };
 
-        altContent.appendChild(nav);
-        altContent.appendChild(altDisplay);
-
-        altDetails.appendChild(altContent);
-        body.appendChild(altDetails);
+        content.appendChild(nav);
     }
 
+    // Display area
+    const display = document.createElement('div');
+    display.className = "cdp-markdown-content";
+    display.innerHTML = renderMarkdown(greetings[0]);
+
+    content.appendChild(display);
+    details.appendChild(content);
+    body.appendChild(details);
+}
 
     if (scenario && scenario.trim()) {
         const scenarioDetails = document.createElement('details');
