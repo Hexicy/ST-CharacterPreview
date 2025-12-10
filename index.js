@@ -331,7 +331,7 @@ if (greetings.length > 0) {
 
     // Dynamic label: Greeting vs Greetings
     const titleWord = greetings.length === 1 ? "Greeting" : "Greetings";
-    summary.textContent = `${titleWord} (${greetings.length})`;
+    summary.textContent = titleWord;
 
     details.appendChild(summary);
 
@@ -358,7 +358,7 @@ if (greetings.length > 0) {
 
         label = document.createElement('span');
         label.style = "flex-grow:1; text-align:center; font-weight:bold;";
-        label.textContent = `Greeting 1 of ${greetings.length}`;
+        label.textContent = `${index + 1} of ${greetings.length}`;
 
         nav.appendChild(prevBtn);
         nav.appendChild(label);
