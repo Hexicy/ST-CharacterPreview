@@ -10,6 +10,22 @@ just to be clear, everything I've done was thanks to Chat GPT and the awesome wo
 
 Anyways, I'm probably going to keep using chat gpt to modify the code and whatnot in my attempts to make some of my ideas for this extension a reality.
 
+## Changes:
+
+• Made the "Creator Notes" dropdown able to display CSS so that it's no longer unreadable when viewing the creator Notes that use CSS.
+
+• Fixed the issue of the text/images going past the screen on mobile. It'll now be properly displayed within the device's screen.
+
+• Gave the "First Message" dropdown the ability to display all of the character's avaliable greetings.
+
+• Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of avaliable greetings. 
+
+I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features (I'm a mobile user), and ensure that that this extension is as user friendly as possible.
+
+As always, if you notice any issues, please tell me so that I can fix them. By me, I mean Chat GPT. Even though you could do it yourself, please tell me so that I can fix it for everyone else. Anyways, enjoy the extension!
+
+# Orignal Author's Notes:
+
 ## Author's Note
 
 My biggest complaint about SillyTavern has long been the fact that clicking on a character card to examine it immediately launches a chat. This plugin is my attempt to circumvent this issue by creating a popup box with options to start a chat. This way I can look at a character properly before I make my decision. I made additional adjustments so that it works with lazy loading, as I have 1,000+ cards (I'm a data hoarder leave me alone) and so lazy loading is a requirement for my container not to overload itself on every refresh.
