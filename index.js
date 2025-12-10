@@ -367,7 +367,7 @@ if (greetings.length > 0) {
         // Update function
         function update() {
             display.innerHTML = renderMarkdown(greetings[index]);
-            label.textContent = `Greeting ${index + 1} of ${greetings.length}`;
+            label.textContent = `${index + 1} of ${greetings.length}`;
         }
 
         prevBtn.onclick = () => {
