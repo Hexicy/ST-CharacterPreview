@@ -20,7 +20,9 @@ Anyways, I'm probably going to keep using chat gpt to modify the code and whatno
 
 • Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of avaliable greetings. 
 
-I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features (I'm a mobile user), and ensure that that this extension is as user friendly as possible.
+I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features, and ensure that that this extension is as user friendly as possible.
+
+Just to quickly clarify, I an a mobile user so rest assured that, if you're on mobile, this extention works. However, I am a mobile user only so I have no idea how this extention works on PC. If you use this extension on PC, please tell me how it goes.
 
 As always, if you notice any issues, please tell me so that I can fix them. By me, I mean Chat GPT. Even though you could do it yourself, please tell me so that I can fix it for everyone else. Anyways, enjoy the extension!
 
