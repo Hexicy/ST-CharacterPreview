@@ -302,19 +302,96 @@ function createCharacterBox(characterData, localAvatar) {
     descriptionDetails.appendChild(descContent);
     body.appendChild(descriptionDetails);
 
-    if (firstMessage && firstMessage.trim()) {
-        const firstMessageDetails = document.createElement('details');
-        firstMessageDetails.className = 'cdp-collapsible';
-        const firstMessageSummary = document.createElement('summary');
-        firstMessageSummary.className = 'cdp-collapsible__summary';
-        firstMessageSummary.textContent = 'First Message';
-        const firstMessageContent = document.createElement('div');
-        firstMessageContent.className = 'cdp-collapsible__content cdp-markdown-content';
-        firstMessageContent.innerHTML = renderMarkdown(firstMessage.trim());
-        firstMessageDetails.appendChild(firstMessageSummary);
-        firstMessageDetails.appendChild(firstMessageContent);
-        body.appendChild(firstMessageDetails);
+// --- Unified Greeting(s) Section ---
+const baseGreeting = firstMessage?.trim();
+const altGreetings =
+    data?.alternate_greetings ||
+    data?.alts?.greeting ||
+    data?.alts_greeting ||
+    data?.alts_greetings ||
+    data?.greetings ||
+    data?.first_mes_alts ||
+    null;
+
+// Merge into single array
+let greetings = [];
+if (baseGreeting) greetings.push(baseGreeting);
+if (Array.isArray(altGreetings)) greetings = greetings.concat(altGreetings);
+
+// Stop if no greetings at all
+if (greetings.length > 0) {
+
+    let index = 0;
+
+    const details = document.createElement('details');
+    details.className = 'cdp-collapsible';
+
+    const summary = document.createElement('summary');
+    summary.className = 'cdp-collapsible__summary';
+
+    // Dynamic label: Greeting vs Greetings
+    const titleWord = greetings.length === 1 ? "Greeting" : "Greetings";
+    summary.textContent = titleWord;
+
+    details.appendChild(summary);
+
+    const content = document.createElement('div');
+    content.className = 'cdp-collapsible__content';
+
+    // Navigation row (only shown if more than one)
+    let nav = null;
+    let label = null;
+
+    if (greetings.length > 1) {
+        nav = document.createElement('div');
+        nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = "◀";
+        prevBtn.className = "cdp-button cdp-button--secondary";
+        prevBtn.style = "padding:4px 10px;";
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = "▶";
+        nextBtn.className = "cdp-button cdp-button--secondary";
+        nextBtn.style = "padding:4px 10px;";
+
+        label = document.createElement('span');
+        label.style = "flex-grow:1; text-align:center; font-weight:bold;";
+        label.textContent = `${index + 1} of ${greetings.length}`;
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(label);
+        nav.appendChild(nextBtn);
+
+        // Update function
+        function update() {
+            display.innerHTML = renderMarkdown(greetings[index]);
+            label.textContent = `Greeting ${index + 1} of ${greetings.length}`;
+        }
+
+        prevBtn.onclick = () => {
+            index = (index - 1 + greetings.length) % greetings.length;
+            update();
+        };
+
+        nextBtn.onclick = () => {
+            index = (index + 1) % greetings.length;
+            update();
+        };
+
+        content.appendChild(nav);
     }
+
+    // Display area
+    const display = document.createElement('div');
+    display.className = "cdp-markdown-content";
+    display.innerHTML = renderMarkdown(greetings[0]);
+
+    content.appendChild(display);
+    details.appendChild(content);
+    body.appendChild(details);
+}
 
     if (scenario && scenario.trim()) {
         const scenarioDetails = document.createElement('details');
