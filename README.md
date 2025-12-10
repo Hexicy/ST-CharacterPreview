@@ -1,14 +1,14 @@
 # Character Details Popup
 
-SillyTavern extension that displays character information in a popup box when clicking character cards.
+SillyTavern extension that displays character information in a pop-up box when clicking character cards.
 
 ## Fork Notes
 
-First off, I have no idea what I'm doing. At this moment, I don't know how to code. But, with the help of chat gpt, I was able to change the code to add some more features that I wanted from this really great extension. For example, I was able to change the code to allow CSS to load on the creator note's tab. 
+First off, I have no idea what I'm doing. At this moment, I don't know how to code. But, with the help of ChatGPT, I was able to change the code to add some more features that I wanted from this really great extension. For example, I was able to change the code to allow CSS to load on the creator notes tab. 
 
-just to be clear, everything I've done was thanks to Chat GPT and the awesome work of the orginal author. If you want to support anyone, do it to the orginal creator.
+Just to be clear, everything I've done was thanks to Chat GPT and the awesome work of the original author. If you want to support anyone, do it to the original creator.
 
-Anyways, I'm probably going to keep using chat gpt to modify the code and whatnot in my attempts to make some of my ideas for this extension a reality.
+Anyways, I'm probably going to keep using ChatGPT to modify the code and whatnot in my attempts to make some of my ideas for this extension a reality.
 
 ## Changes:
 
@@ -16,17 +16,17 @@ Anyways, I'm probably going to keep using chat gpt to modify the code and whatno
 
 • Fixed the issue of the text/images going past the screen on mobile. It'll now be properly displayed within the device's screen.
 
-• Gave the "First Message" dropdown the ability to display all of the character's avaliable greetings.
+• Gave the "First Message" dropdown the ability to display all of the character's available greetings.
 
-• Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of avaliable greetings. 
+• Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of available greetings. 
 
-I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features, and ensure that that this extension is as user friendly as possible.
+I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features, and ensure that this extension is as user-friendly as possible.
 
-Just to quickly clarify, I an a mobile user so rest assured that, if you're on mobile, this extention works. However, I am a mobile user only so I have no idea how this extention works on PC. If you use this extension on PC, please tell me how it goes.
+Just to quickly clarify, I am a mobile user so rest assured that, if you're on mobile, this extension works. However, I am a mobile user only so I have no idea how this extension works on PC. If you use this extension on PC, please tell me how it goes.
 
-As always, if you notice any issues, please tell me so that I can fix them. By me, I mean Chat GPT. Even though you could do it yourself, please tell me so that I can fix it for everyone else. Anyways, enjoy the extension!
+As always, if you notice any issues, please tell me so that I can fix them. By me, I mean ChatGPT. Even though you could do it yourself, please tell me so that I can fix it for everyone else. Anyway, enjoy the extension!
 
-# Orignal Author's Notes:
+# Original Author's Notes:
 
 ## Author's Note
 
