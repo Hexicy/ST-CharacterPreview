@@ -436,21 +436,28 @@ if (exampleMessages && exampleMessages.trim()) {
 }
 
 // --------------------------------------
-// Insert in user-selected order
+// Insert sections in fixed natural order
 // --------------------------------------
-const order = extensionSettings.sectionOrder;
+const naturalOrder = [
+    "description",
+    "greetings",
+    "scenario",
+    "personality",
+    "creatorNotes",
+    "exampleMessages"
+];
+
 const visibility = extensionSettings.sectionsVisible;
 
-order.forEach(id => {
+naturalOrder.forEach(id => {
     if (visibility[id] && sections[id]) {
         body.appendChild(sections[id]);
-
-        // Auto-open setting
         if (extensionSettings.autoOpenSection === id) {
             sections[id].open = true;
         }
     }
 });
+
 
     content.appendChild(body);
     box.appendChild(content);
@@ -861,53 +868,7 @@ $('#stcp-auto-open')
         extensionSettings.autoOpenSection = this.value;
         saveSettings();
     });
-
-// ------------------------------
-// Section ordering (drag-sortable)
-// ------------------------------
-const orderBox = document.getElementById('stcp-order-list');
-
-function drawOrderList() {
-    orderBox.innerHTML = "";
-    extensionSettings.sectionOrder.forEach(id => {
-        const item = document.createElement('div');
-        item.className = "stcp-sortable-item";
-        item.setAttribute('data-id', id);
-        item.textContent = id;
-        orderBox.appendChild(item);
-    });
-}
-
-drawOrderList();
-
-function saveOrderFromDOM() {
-    const items = orderBox.querySelectorAll('.stcp-sortable-item');
-    extensionSettings.sectionOrder = [...items].map(x => x.getAttribute('data-id'));
-    saveSettings();
-}
-
-// Make draggable
-let dragItem = null;
-
-orderBox.addEventListener('dragstart', (e) => {
-    dragItem = e.target;
-    e.target.style.opacity = "0.5";
-});
-
-orderBox.addEventListener('dragend', (e) => {
-    e.target.style.opacity = "1";
-    saveOrderFromDOM();
-});
-
-orderBox.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    const target = e.target.closest('.stcp-sortable-item');
-    if (target && target !== dragItem) {
-        const rect = target.getBoundingClientRect();
-        const next = (e.clientY - rect.top) > (rect.height / 2);
-        orderBox.insertBefore(dragItem, next ? target.nextSibling : target);
-    }
-});
+    
     updateSettingsUI();
 }
 
