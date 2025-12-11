@@ -634,15 +634,17 @@ function buildOrderUI() {
         const controls = document.createElement("div");
         controls.className = "stcp-order-controls";
 
-        const up = document.createElement("button");
-        up.textContent = "↑";
-        up.className = "cdp-button cdp-button--secondary";
-        up.onclick = () => moveSection(index, -1);
+        // Up Button
+const up = document.createElement("button");
+up.innerHTML = "&uarr;";  // clean arrow
+up.className = "stcp-order-btn";
+up.onclick = () => moveSection(index, -1);
 
-        const down = document.createElement("button");
-        down.textContent = "↓";
-        down.className = "cdp-button cdp-button--secondary";
-        down.onclick = () => moveSection(index, +1);
+// Down Button
+const down = document.createElement("button");
+down.innerHTML = "&darr;";
+down.className = "stcp-order-btn";
+down.onclick = () => moveSection(index, +1);
 
         controls.appendChild(up);
         controls.appendChild(down);
