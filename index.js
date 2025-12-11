@@ -305,6 +305,158 @@ function createCharacterBox(characterData, localAvatar) {
     const body = document.createElement('div');
     body.className = 'cdp-box__body';
 
+    // --------------------------------------
+// Build all sections into a lookup table
+// --------------------------------------
+const sections = {};
+
+// --- Description ---
+if (description && description.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Description';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(description);
+    el.append(sum, cont);
+    sections.description = el;
+}
+
+// --- Greetings (combined first message + alternatives) ---
+if ((firstMessage && firstMessage.trim()) || (Array.isArray(data?.alternate_greetings) && data.alternate_greetings.length)) {
+    const combined = document.createElement('details');
+    combined.className = 'cdp-collapsible';
+
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Greetings';
+
+    // Content container
+    const wrap = document.createElement('div');
+    wrap.className = 'cdp-collapsible__content';
+
+    const altArray = data.alternate_greetings || [];
+
+    let greetingsList = [];
+    if (firstMessage && firstMessage.trim()) greetingsList.push(firstMessage.trim());
+    greetingsList.push(...altArray);
+
+    let gIndex = 0;
+
+    // Nav bar
+    const nav = document.createElement('div');
+    nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = "◀";
+    prevBtn.className = "cdp-button cdp-button--secondary";
+    prevBtn.style = "padding:4px 10px;";
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = "▶";
+    nextBtn.className = "cdp-button cdp-button--secondary";
+    nextBtn.style = "padding:4px 10px;";
+
+    const label = document.createElement('span');
+    label.style = "flex-grow:1; text-align:center; font-weight:bold;";
+    label.textContent = `${gIndex + 1} of ${greetingsList.length}`;
+
+    nav.append(prevBtn, label, nextBtn);
+
+    // Message display
+    const disp = document.createElement('div');
+    disp.className = 'cdp-markdown-content';
+    disp.innerHTML = renderMarkdown(greetingsList[gIndex]);
+
+    function updateGreeting() {
+        disp.innerHTML = renderMarkdown(greetingsList[gIndex]);
+        label.textContent = `${gIndex + 1} of ${greetingsList.length}`;
+    }
+
+    prevBtn.onclick = () => { gIndex = (gIndex - 1 + greetingsList.length) % greetingsList.length; updateGreeting(); }
+    nextBtn.onclick = () => { gIndex = (gIndex + 1) % greetingsList.length; updateGreeting(); }
+
+    wrap.append(nav, disp);
+    combined.append(sum, wrap);
+
+    sections.greetings = combined;
+}
+
+// --- Scenario ---
+if (scenario && scenario.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Scenario';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(scenario);
+    el.append(sum, cont);
+    sections.scenario = el;
+}
+
+// --- Personality ---
+if (personality && personality.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Personality';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(personality);
+    el.append(sum, cont);
+    sections.personality = el;
+}
+
+// --- Creator Notes ---
+if (creatorNotes && creatorNotes.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Creator Notes';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(creatorNotes);
+    el.append(sum, cont);
+    sections.creatorNotes = el;
+}
+
+// --- Example Messages ---
+if (exampleMessages && exampleMessages.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Example Messages';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(exampleMessages);
+    el.append(sum, cont);
+    sections.exampleMessages = el;
+}
+
+// --------------------------------------
+// Insert in user-selected order
+// --------------------------------------
+const order = extensionSettings.sectionOrder;
+const visibility = extensionSettings.sectionsVisible;
+
+order.forEach(id => {
+    if (visibility[id] && sections[id]) {
+        body.appendChild(sections[id]);
+
+        // Auto-open setting
+        if (extensionSettings.autoOpenSection === id) {
+            sections[id].open = true;
+        }
+    }
+});
+
     const descriptionDetails = document.createElement('details');
     descriptionDetails.className = 'cdp-collapsible';
     descriptionDetails.open = true;
