@@ -58,12 +58,6 @@ let extensionSettings = {
     exampleMessages: true,
 },
 
-    showDescription: true,
-    showGreetings: true,
-    showScenario: true,
-    showPersonality: true,
-    showCreatorNotes: true,
-    showExampleMessages: true,
     sectionOrder: [
     "description",
     "greetings",
@@ -466,7 +460,6 @@ order.forEach(id => {
         }
     }
 });
-    }
 
     content.appendChild(body);
     box.appendChild(content);
