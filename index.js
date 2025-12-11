@@ -935,6 +935,7 @@ $('#stcp-auto-open')
     });
     
     updateSettingsUI();
+    buildOrderUI();
 }
 
 /**
