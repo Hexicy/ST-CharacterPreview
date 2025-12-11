@@ -48,6 +48,26 @@ let extensionSettings = {
     blurStrength: 10,
     useThemeFontColor: true,
     useThemeBackgroundColor: true,
+
+    sectionsVisible: {
+    description: true,
+    greetings: true,
+    scenario: true,
+    personality: true,
+    creatorNotes: true,
+    exampleMessages: true,
+},
+
+    sectionOrder: [
+    "description",
+    "greetings",
+    "scenario",
+    "personality",
+    "creatorNotes",
+    "exampleMessages",
+],
+
+autoOpenSection: "greetings",
 };
 
 /**
@@ -289,173 +309,155 @@ function createCharacterBox(characterData, localAvatar) {
     const body = document.createElement('div');
     body.className = 'cdp-box__body';
 
-    const descriptionDetails = document.createElement('details');
-    descriptionDetails.className = 'cdp-collapsible';
-    descriptionDetails.open = true;
-    const descriptionSummary = document.createElement('summary');
-    descriptionSummary.className = 'cdp-collapsible__summary';
-    descriptionSummary.textContent = 'Description';
-    const descContent = document.createElement('div');
-    descContent.className = 'cdp-collapsible__content cdp-markdown-content';
-    descContent.innerHTML = renderMarkdown(description);
-    descriptionDetails.appendChild(descriptionSummary);
-    descriptionDetails.appendChild(descContent);
-    body.appendChild(descriptionDetails);
+    // --------------------------------------
+// Build all sections into a lookup table
+// --------------------------------------
+const sections = {};
 
-// --- Unified Greeting(s) Section ---
-const baseGreeting = firstMessage?.trim();
-const altGreetings =
-    data?.alternate_greetings ||
-    data?.alts?.greeting ||
-    data?.alts_greeting ||
-    data?.alts_greetings ||
-    data?.greetings ||
-    data?.first_mes_alts ||
-    null;
-
-// Merge into single array
-let greetings = [];
-if (baseGreeting) greetings.push(baseGreeting);
-if (Array.isArray(altGreetings)) greetings = greetings.concat(altGreetings);
-
-// Stop if no greetings at all
-if (greetings.length > 0) {
-
-    let index = 0;
-
-    const details = document.createElement('details');
-    details.className = 'cdp-collapsible';
-
-    const summary = document.createElement('summary');
-    summary.className = 'cdp-collapsible__summary';
-
-    // Dynamic label: Greeting vs Greetings
-    const titleWord = greetings.length === 1 ? "Greeting" : "Greetings";
-    summary.textContent = titleWord;
-
-    details.appendChild(summary);
-
-    const content = document.createElement('div');
-    content.className = 'cdp-collapsible__content';
-
-    // Navigation row (only shown if more than one)
-    let nav = null;
-    let label = null;
-
-    if (greetings.length > 1) {
-        nav = document.createElement('div');
-        nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
-
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = "◀";
-        prevBtn.className = "cdp-button cdp-button--secondary";
-        prevBtn.style = "padding:4px 10px;";
-
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = "▶";
-        nextBtn.className = "cdp-button cdp-button--secondary";
-        nextBtn.style = "padding:4px 10px;";
-
-        label = document.createElement('span');
-        label.style = "flex-grow:1; text-align:center; font-weight:bold;";
-        label.textContent = `${index + 1} of ${greetings.length}`;
-
-        nav.appendChild(prevBtn);
-        nav.appendChild(label);
-        nav.appendChild(nextBtn);
-
-        // Update function
-        function update() {
-            display.innerHTML = renderMarkdown(greetings[index]);
-            label.textContent = `${index + 1} of ${greetings.length}`;
-        }
-
-        prevBtn.onclick = () => {
-            index = (index - 1 + greetings.length) % greetings.length;
-            update();
-        };
-
-        nextBtn.onclick = () => {
-            index = (index + 1) % greetings.length;
-            update();
-        };
-
-        content.appendChild(nav);
-    }
-
-    // Display area
-    const display = document.createElement('div');
-    display.className = "cdp-markdown-content";
-    display.innerHTML = renderMarkdown(greetings[0]);
-
-    content.appendChild(display);
-    details.appendChild(content);
-    body.appendChild(details);
+// --- Description ---
+if (description && description.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Description';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(description);
+    el.append(sum, cont);
+    sections.description = el;
 }
 
-    if (scenario && scenario.trim()) {
-        const scenarioDetails = document.createElement('details');
-        scenarioDetails.className = 'cdp-collapsible';
-        const scenarioSummary = document.createElement('summary');
-        scenarioSummary.className = 'cdp-collapsible__summary';
-        scenarioSummary.textContent = 'Scenario';
-        const scenarioContent = document.createElement('div');
-        scenarioContent.className = 'cdp-collapsible__content';
-        const scenarioText = document.createElement('p');
-        scenarioText.textContent = scenario.trim();
-        scenarioContent.appendChild(scenarioText);
-        scenarioDetails.appendChild(scenarioSummary);
-        scenarioDetails.appendChild(scenarioContent);
-        body.appendChild(scenarioDetails);
+// --- Greetings (combined first message + alternatives) ---
+if ((firstMessage && firstMessage.trim()) || (Array.isArray(data?.alternate_greetings) && data.alternate_greetings.length)) {
+    const combined = document.createElement('details');
+    combined.className = 'cdp-collapsible';
+
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Greetings';
+
+    // Content container
+    const wrap = document.createElement('div');
+    wrap.className = 'cdp-collapsible__content';
+
+    const altArray = data.alternate_greetings || [];
+
+    let greetingsList = [];
+    if (firstMessage && firstMessage.trim()) greetingsList.push(firstMessage.trim());
+    greetingsList.push(...altArray);
+
+    let gIndex = 0;
+
+    // Nav bar
+    const nav = document.createElement('div');
+    nav.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;";
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = "◀";
+    prevBtn.className = "cdp-button cdp-button--secondary";
+    prevBtn.style = "padding:4px 10px;";
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = "▶";
+    nextBtn.className = "cdp-button cdp-button--secondary";
+    nextBtn.style = "padding:4px 10px;";
+
+    const label = document.createElement('span');
+    label.style = "flex-grow:1; text-align:center; font-weight:bold;";
+    label.textContent = `${gIndex + 1} of ${greetingsList.length}`;
+
+    nav.append(prevBtn, label, nextBtn);
+
+    // Message display
+    const disp = document.createElement('div');
+    disp.className = 'cdp-markdown-content';
+    disp.innerHTML = renderMarkdown(greetingsList[gIndex]);
+
+    function updateGreeting() {
+        disp.innerHTML = renderMarkdown(greetingsList[gIndex]);
+        label.textContent = `${gIndex + 1} of ${greetingsList.length}`;
     }
 
-    if (personality && personality.trim()) {
-        const personalityDetails = document.createElement('details');
-        personalityDetails.className = 'cdp-collapsible';
-        const personalitySummary = document.createElement('summary');
-        personalitySummary.className = 'cdp-collapsible__summary';
-        personalitySummary.textContent = 'Personality';
-        const personalityContent = document.createElement('div');
-        personalityContent.className = 'cdp-collapsible__content';
-        const personalityText = document.createElement('p');
-        personalityText.textContent = personality.trim();
-        personalityContent.appendChild(personalityText);
-        personalityDetails.appendChild(personalitySummary);
-        personalityDetails.appendChild(personalityContent);
-        body.appendChild(personalityDetails);
-    }
+    prevBtn.onclick = () => { gIndex = (gIndex - 1 + greetingsList.length) % greetingsList.length; updateGreeting(); }
+    nextBtn.onclick = () => { gIndex = (gIndex + 1) % greetingsList.length; updateGreeting(); }
 
-    if (creatorNotes && creatorNotes.trim()) {
-        const creatorNotesDetails = document.createElement('details');
-        creatorNotesDetails.className = 'cdp-collapsible';
-        const creatorNotesSummary = document.createElement('summary');
-        creatorNotesSummary.className = 'cdp-collapsible__summary';
-        creatorNotesSummary.textContent = 'Creator Notes';
-        const creatorNotesContent = document.createElement('div');
-        creatorNotesContent.className = 'cdp-collapsible__content';
-        creatorNotesContent.innerHTML = creatorNotes
-    .trim()
-    .replace(/\n/g, "<br>");
-        creatorNotesDetails.appendChild(creatorNotesSummary);
-        creatorNotesDetails.appendChild(creatorNotesContent);
-        body.appendChild(creatorNotesDetails);
-    }
+    wrap.append(nav, disp);
+    combined.append(sum, wrap);
 
-    if (exampleMessages && exampleMessages.trim()) {
-        const exampleDetails = document.createElement('details');
-        exampleDetails.className = 'cdp-collapsible';
-        const exampleSummary = document.createElement('summary');
-        exampleSummary.className = 'cdp-collapsible__summary';
-        exampleSummary.textContent = 'Example Messages';
-        const exampleContent = document.createElement('div');
-        exampleContent.className = 'cdp-collapsible__content';
-        const exampleText = document.createElement('p');
-        exampleText.textContent = exampleMessages.trim();
-        exampleContent.appendChild(exampleText);
-        exampleDetails.appendChild(exampleSummary);
-        exampleDetails.appendChild(exampleContent);
-        body.appendChild(exampleDetails);
+    sections.greetings = combined;
+}
+
+// --- Scenario ---
+if (scenario && scenario.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Scenario';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(scenario);
+    el.append(sum, cont);
+    sections.scenario = el;
+}
+
+// --- Personality ---
+if (personality && personality.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Personality';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(personality);
+    el.append(sum, cont);
+    sections.personality = el;
+}
+
+// --- Creator Notes ---
+if (creatorNotes && creatorNotes.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Creator Notes';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(creatorNotes);
+    el.append(sum, cont);
+    sections.creatorNotes = el;
+}
+
+// --- Example Messages ---
+if (exampleMessages && exampleMessages.trim()) {
+    const el = document.createElement('details');
+    el.className = 'cdp-collapsible';
+    const sum = document.createElement('summary');
+    sum.className = 'cdp-collapsible__summary';
+    sum.textContent = 'Example Messages';
+    const cont = document.createElement('div');
+    cont.className = 'cdp-collapsible__content cdp-markdown-content';
+    cont.innerHTML = renderMarkdown(exampleMessages);
+    el.append(sum, cont);
+    sections.exampleMessages = el;
+}
+
+const order = extensionSettings.sectionOrder;
+const visibility = extensionSettings.sectionsVisible;
+
+order.forEach(id => {
+    if (visibility[id] && sections[id]) {
+        body.appendChild(sections[id]);
+
+        if (extensionSettings.autoOpenSection === id) {
+            sections[id].open = true;
+        }
     }
+});
+
+
 
     content.appendChild(body);
     box.appendChild(content);
@@ -602,6 +604,72 @@ function applySettings() {
     root.style.setProperty('--cdp-responsive-breakpoint', `${extensionSettings.responsiveBreakpoint}px`);
 }
 
+// =====================================
+// Section Order UI (Move Up / Down)
+// =====================================
+
+function buildOrderUI() {
+    const container = document.getElementById("stcp-order-list");
+    if (!container) return;
+
+    const labels = {
+        description: "Description",
+        greetings: "Greetings",
+        scenario: "Scenario",
+        personality: "Personality",
+        creatorNotes: "Creator Notes",
+        exampleMessages: "Example Messages",
+    };
+
+    container.innerHTML = "";
+
+    extensionSettings.sectionOrder.forEach((id, index) => {
+        const row = document.createElement("div");
+        row.className = "stcp-order-item";
+
+        const label = document.createElement("div");
+        label.className = "stcp-order-label";
+        label.textContent = labels[id] || id;
+
+        const controls = document.createElement("div");
+        controls.className = "stcp-order-controls";
+
+        // Up Button
+const up = document.createElement("button");
+up.innerHTML = "&uarr;";  // clean arrow
+up.className = "stcp-order-btn";
+up.onclick = () => moveSection(index, -1);
+
+// Down Button
+const down = document.createElement("button");
+down.innerHTML = "&darr;";
+down.className = "stcp-order-btn";
+down.onclick = () => moveSection(index, +1);
+
+        controls.appendChild(up);
+        controls.appendChild(down);
+
+        row.appendChild(label);
+        row.appendChild(controls);
+
+        container.appendChild(row);
+    });
+}
+
+function moveSection(index, direction) {
+    const order = extensionSettings.sectionOrder;
+    const newIndex = index + direction;
+
+    if (newIndex < 0 || newIndex >= order.length) return;
+
+    const temp = order[index];
+    order[index] = order[newIndex];
+    order[newIndex] = temp;
+
+    saveSettings();
+    buildOrderUI();
+}
+
 /**
  * Reset settings to defaults
  */
@@ -625,10 +693,22 @@ function resetSettings() {
         blurStrength: 10,
         useThemeFontColor: true,
         useThemeBackgroundColor: true,
+
+                sectionsVisible: {
+            description: true,
+            greetings: true,
+            scenario: true,
+            personality: true,
+            creatorNotes: true,
+            exampleMessages: true,
+        },
+
+        autoOpenSection: "greetings",
     };
     saveSettings();
     applySettings();
     updateSettingsUI();
+    buildOrderUI();
     log('Settings reset to defaults');
 }
 
@@ -816,7 +896,48 @@ async function addExtensionSettings() {
         resetSettings();
     });
 
+        // ------------------------------
+// Section Visibility
+// ------------------------------
+const vis = extensionSettings.sectionsVisible;
+
+$('#stcp-show-description').prop('checked', vis.description).on('change', function () {
+    extensionSettings.sectionsVisible.description = this.checked;
+    saveSettings();
+});
+$('#stcp-show-greetings').prop('checked', vis.greetings).on('change', function () {
+    extensionSettings.sectionsVisible.greetings = this.checked;
+    saveSettings();
+});
+$('#stcp-show-scenario').prop('checked', vis.scenario).on('change', function () {
+    extensionSettings.sectionsVisible.scenario = this.checked;
+    saveSettings();
+});
+$('#stcp-show-personality').prop('checked', vis.personality).on('change', function () {
+    extensionSettings.sectionsVisible.personality = this.checked;
+    saveSettings();
+});
+$('#stcp-show-creatorNotes').prop('checked', vis.creatorNotes).on('change', function () {
+    extensionSettings.sectionsVisible.creatorNotes = this.checked;
+    saveSettings();
+});
+$('#stcp-show-exampleMessages').prop('checked', vis.exampleMessages).on('change', function () {
+    extensionSettings.sectionsVisible.exampleMessages = this.checked;
+    saveSettings();
+});
+
+// ------------------------------
+// Auto-open dropdown
+// ------------------------------
+$('#stcp-auto-open')
+    .val(extensionSettings.autoOpenSection)
+    .on('change', function () {
+        extensionSettings.autoOpenSection = this.value;
+        saveSettings();
+    });
+    
     updateSettingsUI();
+    buildOrderUI();
 }
 
 /**
@@ -839,38 +960,3 @@ jQuery(async () => {
     await addExtensionSettings();
     init();
 });
-
-// Wait until ST is ready
-(function() {
-    function renderNotesPreview() {
-        const ctx = window.SillyTavern?.getContext();
-        if (!ctx) return;
-        const charId = ctx.characterId;
-        if (charId === undefined || charId === null) return;
-
-        const character = ctx.characters[charId];
-        if (!character) return;
-
-        // "notes" field — adjust this key as per ST data structure
-        const raw = character.data?.creator_notes?.trim();
-        if (!raw) return;
-
-        // Try to parse HTML (assuming user uses HTML in Notes)
-        const containerId = 'notes-preview-container';
-        let container = document.getElementById(containerId);
-        if (!container) {
-            container = document.createElement('div');
-            container.id = containerId;
-            container.style = "padding: 10px; border: 1px solid #888; margin-top: 10px;";
-            // Insert into UI — find where notes/description are shown
-            // E.g. after the notes textarea or inside card panel
-            const ref = document.querySelector('.character-card-details'); 
-            if (ref) ref.appendChild(container);
-        }
-
-        container.innerHTML = raw;
-    }
-
-    // Hook into ST UI updates — rerun when character changes
-    setInterval(renderNotesPreview, 1000);
-})();

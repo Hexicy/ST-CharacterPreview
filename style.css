@@ -1,3 +1,9 @@
+/* Dynamic Mobile Viewport Fix */
+:root {
+    /* Real viewport height for modern browsers */
+    --cdp-viewport-height: 100svh;
+}
+
 /* Character Details Popup Extension Styles */
 
 /* Box Overlay */
@@ -8,7 +14,8 @@
     right: 0;
     bottom: 0;
     width: 100vw;
-    height: 100vh;
+    height: var(--cdp-viewport-height);
+    max-height: var(--cdp-viewport-height);
     background-color: rgba(0, 0, 0, var(--cdp-overlay-opacity, 0.7));
     display: flex;
     justify-content: center;
@@ -33,7 +40,7 @@
     opacity: var(--cdp-background-opacity, 0.95);
     width: var(--cdp-content-width, 50%);
     max-width: var(--cdp-box-width, 80vw);
-    max-height: var(--cdp-box-height, 80vh);
+    max-height: calc(var(--cdp-viewport-height) * 0.85);
     border-radius: var(--cdp-box-border-radius, 12px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(var(--cdp-blur-strength, 10px));
@@ -62,7 +69,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--cdp-box-padding, 2rem);
-    padding-bottom: calc(var(--cdp-box-padding, 2rem) + 60px);
+    padding-bottom: calc(var(--cdp-box-padding, 2rem) + env(safe-area-inset-bottom) + 60px);
+    max-height: calc(var(--cdp-viewport-height) - 140px);
 }
 
 /* Header Section (Image + Name) */
@@ -392,4 +400,118 @@
         flex: 1;
         min-width: 120px;
     }
+}
+
+.stcp-sortable-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stcp-sortable-item {
+    background: rgba(255,255,255,0.1);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: grab;
+    user-select: none;
+}
+
+.stcp-sortable-item:active {
+    cursor: grabbing;
+    opacity: 0.7;
+}
+
+.stcp-sortable-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stcp-sortable-item {
+    background: rgba(255,255,255,0.03);
+    padding: 4px;
+    border-radius: 6px;
+    user-select: none;
+    border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Buttons */
+.stcp-order-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    min-width: 36px;
+    font-weight: 600;
+}
+.stcp-order-btn[disabled] {
+    opacity: 0.35;
+}
+
+.stcp-order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    background: var(--SmartThemeBlurTintColor, #222);
+    border-radius: 6px;
+}
+
+.stcp-order-label {
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.stcp-order-controls button {
+    margin-left: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* ============================================
+   Section Order — Polished Card Layout
+   ============================================ */
+
+.stcp-order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--bg-secondary, #1a1a1a);
+    border: 1px solid var(--border-color, #333);
+    border-radius: 8px;
+    margin: 0; /* flush stacking */
+    border-bottom: none; /* remove space between items */
+}
+
+.stcp-order-item:last-child {
+    border-bottom: 1px solid var(--border-color, #333);
+}
+
+.stcp-order-label {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.stcp-order-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.stcp-order-btn {
+    width: 32px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #333);
+    background: var(--bg-tertiary, #2a2a2a);
+    color: var(--text-color, #fff);
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stcp-order-btn:hover {
+    background: var(--hover-highlight, #3a3a3a);
 }
