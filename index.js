@@ -48,6 +48,16 @@ let extensionSettings = {
     blurStrength: 10,
     useThemeFontColor: true,
     useThemeBackgroundColor: true,
+
+    sectionsVisible: {
+    description: true,
+    greetings: true,
+    scenario: true,
+    personality: true,
+    creatorNotes: true,
+    exampleMessages: true,
+},
+
     showDescription: true,
     showGreetings: true,
     showScenario: true,
