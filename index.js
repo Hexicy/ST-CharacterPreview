@@ -829,7 +829,114 @@ async function addExtensionSettings() {
     $('#cdp-reset-settings').on('click', function() {
         resetSettings();
     });
+    
+    // --- Popup section settings ---
+sectionsVisible: {
+    description: true,
+    greetings: true,
+    scenario: true,
+    personality: true,
+    creatorNotes: true,
+    exampleMessages: true,
+},
 
+sectionOrder: [
+    "description",
+    "greetings",
+    "scenario",
+    "personality",
+    "creatorNotes",
+    "exampleMessages",
+],
+
+autoOpenSection: "description",
+
+        // ------------------------------
+// Section Visibility
+// ------------------------------
+const vis = extensionSettings.sectionsVisible;
+
+$('#stcp-show-description').prop('checked', vis.description).on('change', function () {
+    extensionSettings.sectionsVisible.description = this.checked;
+    saveSettings();
+});
+$('#stcp-show-greetings').prop('checked', vis.greetings).on('change', function () {
+    extensionSettings.sectionsVisible.greetings = this.checked;
+    saveSettings();
+});
+$('#stcp-show-scenario').prop('checked', vis.scenario).on('change', function () {
+    extensionSettings.sectionsVisible.scenario = this.checked;
+    saveSettings();
+});
+$('#stcp-show-personality').prop('checked', vis.personality).on('change', function () {
+    extensionSettings.sectionsVisible.personality = this.checked;
+    saveSettings();
+});
+$('#stcp-show-creatorNotes').prop('checked', vis.creatorNotes).on('change', function () {
+    extensionSettings.sectionsVisible.creatorNotes = this.checked;
+    saveSettings();
+});
+$('#stcp-show-exampleMessages').prop('checked', vis.exampleMessages).on('change', function () {
+    extensionSettings.sectionsVisible.exampleMessages = this.checked;
+    saveSettings();
+});
+
+// ------------------------------
+// Auto-open dropdown
+// ------------------------------
+$('#stcp-auto-open')
+    .val(extensionSettings.autoOpenSection)
+    .on('change', function () {
+        extensionSettings.autoOpenSection = this.value;
+        saveSettings();
+    });
+
+// ------------------------------
+// Section ordering (drag-sortable)
+// ------------------------------
+const orderBox = document.getElementById('stcp-order-list');
+
+function drawOrderList() {
+    orderBox.innerHTML = "";
+    extensionSettings.sectionOrder.forEach(id => {
+        const item = document.createElement('div');
+        item.className = "stcp-sortable-item";
+        item.setAttribute('data-id', id);
+        item.textContent = id;
+        orderBox.appendChild(item);
+    });
+}
+
+drawOrderList();
+
+function saveOrderFromDOM() {
+    const items = orderBox.querySelectorAll('.stcp-sortable-item');
+    extensionSettings.sectionOrder = [...items].map(x => x.getAttribute('data-id'));
+    saveSettings();
+}
+
+// Make draggable
+let dragItem = null;
+
+orderBox.addEventListener('dragstart', (e) => {
+    dragItem = e.target;
+    e.target.style.opacity = "0.5";
+});
+
+orderBox.addEventListener('dragend', (e) => {
+    e.target.style.opacity = "1";
+    saveOrderFromDOM();
+});
+
+orderBox.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.stcp-sortable-item');
+    if (target && target !== dragItem) {
+        const rect = target.getBoundingClientRect();
+        const next = (e.clientY - rect.top) > (rect.height / 2);
+        orderBox.insertBefore(dragItem, next ? target.nextSibling : target);
+    }
+});
     updateSettingsUI();
 }
 
