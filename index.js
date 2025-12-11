@@ -433,9 +433,7 @@ if (greetings.length > 0) {
         creatorNotesSummary.textContent = 'Creator Notes';
         const creatorNotesContent = document.createElement('div');
         creatorNotesContent.className = 'cdp-collapsible__content';
-        creatorNotesContent.innerHTML = creatorNotes
-    .trim()
-    .replace(/\n/g, "<br>");
+        creatorNotesContent.innerHTML = renderMarkdown(creatorNotes.trim());
         creatorNotesDetails.appendChild(creatorNotesSummary);
         creatorNotesDetails.appendChild(creatorNotesContent);
         body.appendChild(creatorNotesDetails);
