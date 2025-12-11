@@ -829,27 +829,6 @@ async function addExtensionSettings() {
     $('#cdp-reset-settings').on('click', function() {
         resetSettings();
     });
-    
-    // --- Popup section settings ---
-sectionsVisible: {
-    description: true,
-    greetings: true,
-    scenario: true,
-    personality: true,
-    creatorNotes: true,
-    exampleMessages: true,
-},
-
-sectionOrder: [
-    "description",
-    "greetings",
-    "scenario",
-    "personality",
-    "creatorNotes",
-    "exampleMessages",
-],
-
-autoOpenSection: "description",
 
         // ------------------------------
 // Section Visibility
