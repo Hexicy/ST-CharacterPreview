@@ -50,6 +50,96 @@ let extensionSettings = {
     useThemeBackgroundColor: true,
 };
 
+// -----------------------------
+// User customizable section settings (Step 1)
+// -----------------------------
+const STCP_STORAGE_KEY = 'stcp_user_settings_v1';
+
+// Registry of possible sections (id -> label)
+const CDP_SECTIONS = {
+    description: 'Description',
+    greetings: 'Greeting(s)',
+    scenario: 'Scenario',
+    personality: 'Personality',
+    creatorNotes: 'Creator Notes',
+    exampleMessages: 'Example Messages'
+};
+
+// Default order & visibility
+function getDefaultUserSettings() {
+    return {
+        sections: {
+            description: { visible: true },
+            greetings: { visible: true },
+            scenario: { visible: true },
+            personality: { visible: true },
+            creatorNotes: { visible: true },
+            exampleMessages: { visible: true }
+        },
+        // default visual order (top -> bottom)
+        order: ['description','greetings','scenario','personality','creatorNotes','exampleMessages'],
+        // which section to auto-open when popup opens (id or null)
+        autoOpen: 'greetings'
+    };
+}
+
+/**
+ * Load user settings from localStorage and merge with defaults.
+ * Returns a settings object guaranteed to contain all known sections.
+ */
+function loadUserSettings() {
+    try {
+        const raw = localStorage.getItem(STCP_STORAGE_KEY);
+        let saved = raw ? JSON.parse(raw) : null;
+        const def = getDefaultUserSettings();
+
+        if (!saved || typeof saved !== 'object') {
+            saved = {};
+        }
+
+        // Merge sections: ensure all known keys exist
+        const sections = Object.assign({}, def.sections, saved.sections || {});
+
+        // Normalize order: include all known section ids and keep user order first
+        let order = Array.isArray(saved.order) ? saved.order.slice() : def.order.slice();
+        // Append any missing defaults
+        for (const id of def.order) {
+            if (!order.includes(id)) order.push(id);
+        }
+        // Filter to known ids only
+        order = order.filter(id => Object.prototype.hasOwnProperty.call(def.sections, id));
+
+        // AutoOpen fallback
+        let autoOpen = saved.autoOpen || def.autoOpen;
+        if (!order.includes(autoOpen)) autoOpen = order.length ? order[0] : null;
+
+        const merged = { sections, order, autoOpen };
+        return merged;
+    } catch (e) {
+        console.error('[Character Details Popup] Failed to load user settings, using defaults.', e);
+        return getDefaultUserSettings();
+    }
+}
+
+/**
+ * Save user settings to localStorage.
+ * Expects the same shape as returned by loadUserSettings().
+ */
+function saveUserSettings(settings) {
+    try {
+        const toSave = {
+            sections: settings.sections,
+            order: settings.order,
+            autoOpen: settings.autoOpen
+        };
+        localStorage.setItem(STCP_STORAGE_KEY, JSON.stringify(toSave));
+        console.log('[Character Details Popup] User settings saved.');
+    } catch (e) {
+        console.error('[Character Details Popup] Failed to save user settings.', e);
+    }
+}
+
+
 /**
  * Log message with extension prefix
  * @param {string} message - Message to log
