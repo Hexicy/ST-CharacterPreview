@@ -48,6 +48,22 @@ let extensionSettings = {
     blurStrength: 10,
     useThemeFontColor: true,
     useThemeBackgroundColor: true,
+    showDescription: true,
+    showGreetings: true,
+    showScenario: true,
+    showPersonality: true,
+    showCreatorNotes: true,
+    showExampleMessages: true,
+    sectionOrder: [
+    "description",
+    "greetings",
+    "scenario",
+    "personality",
+    "creatorNotes",
+    "exampleMessages"
+],
+
+autoOpenSection: "greetings",
 };
 
 /**
