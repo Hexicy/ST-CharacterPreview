@@ -629,6 +629,26 @@ function resetSettings() {
         blurStrength: 10,
         useThemeFontColor: true,
         useThemeBackgroundColor: true,
+
+                sectionsVisible: {
+            description: true,
+            greetings: true,
+            scenario: true,
+            personality: true,
+            creatorNotes: true,
+            exampleMessages: true,
+        },
+
+        sectionOrder: [
+            "description",
+            "greetings",
+            "scenario",
+            "personality",
+            "creatorNotes",
+            "exampleMessages"
+        ],
+
+        autoOpenSection: "greetings",
     };
     saveSettings();
     applySettings();
@@ -929,38 +949,3 @@ jQuery(async () => {
     await addExtensionSettings();
     init();
 });
-
-// Wait until ST is ready
-(function() {
-    function renderNotesPreview() {
-        const ctx = window.SillyTavern?.getContext();
-        if (!ctx) return;
-        const charId = ctx.characterId;
-        if (charId === undefined || charId === null) return;
-
-        const character = ctx.characters[charId];
-        if (!character) return;
-
-        // "notes" field — adjust this key as per ST data structure
-        const raw = character.data?.creator_notes?.trim();
-        if (!raw) return;
-
-        // Try to parse HTML (assuming user uses HTML in Notes)
-        const containerId = 'notes-preview-container';
-        let container = document.getElementById(containerId);
-        if (!container) {
-            container = document.createElement('div');
-            container.id = containerId;
-            container.style = "padding: 10px; border: 1px solid #888; margin-top: 10px;";
-            // Insert into UI — find where notes/description are shown
-            // E.g. after the notes textarea or inside card panel
-            const ref = document.querySelector('.character-card-details'); 
-            if (ref) ref.appendChild(container);
-        }
-
-        container.innerHTML = raw;
-    }
-
-    // Hook into ST UI updates — rerun when character changes
-    setInterval(renderNotesPreview, 1000);
-})();
