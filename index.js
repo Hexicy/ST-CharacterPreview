@@ -58,7 +58,7 @@ let extensionSettings = {
     exampleMessages: true,
 },
 
-autoOpenSection: "creatorNotes",
+autoOpenSection: "greetings",
 };
 
 /**
@@ -637,7 +637,7 @@ function resetSettings() {
             exampleMessages: true,
         },
 
-        autoOpenSection: "creatorNotes",
+        autoOpenSection: "greetings",
     };
     saveSettings();
     applySettings();
