@@ -446,3 +446,24 @@
 .stcp-order-btn[disabled] {
     opacity: 0.35;
 }
+
+.stcp-order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    background: var(--SmartThemeBlurTintColor, #222);
+    border-radius: 6px;
+}
+
+.stcp-order-label {
+    font-size: 14px;
+    flex-grow: 1;
+}
+
+.stcp-order-controls button {
+    margin-left: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
