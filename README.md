@@ -12,13 +12,13 @@ Anyways, I'm probably going to keep using ChatGPT to modify the code and whatnot
 
 ## Changes:
 
-• Made the "Creator Notes" dropdown able to display CSS so that it's no longer unreadable when viewing the creator Notes that use CSS.
-
-• Fixed the issue of the text/images going past the screen on mobile. It'll now be properly displayed within the device's screen.
-
-• Gave the "First Message" dropdown the ability to display all of the character's available greetings.
-
-• Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of available greetings. 
+* Made the "Creator Notes" dropdown able to display CSS so that it's no longer unreadable when viewing the creator Notes that use CSS.
+* Fixed the issue of the text/images going past the screen on mobile. It'll now be properly displayed within the device's screen.
+* Gave the "First Message" dropdown the ability to display all of the character's available greetings.
+* Because of the change above, I changed the "First Message" dropdown to instead be called "Greeting" or "Greetings" depending on the amount of available greetings.
+* Markdown is now visable in creator notes.
+* The "Start chat" and "Close" buttons will no longer get covered on mobile.
+* Option in settings to allow the individual user to toggle which dropdowns are visable in the popup, what order they appear in, and which dropdown opens automatically.
 
 I'll be working on trying to add more to this extension in the future. I currently plan on trying to add more user configuration to the settings, more mobile support/features, and ensure that this extension is as user-friendly as possible.
 
