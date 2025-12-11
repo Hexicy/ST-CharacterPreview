@@ -58,6 +58,15 @@ let extensionSettings = {
     exampleMessages: true,
 },
 
+    sectionOrder: [
+    "description",
+    "greetings",
+    "scenario",
+    "personality",
+    "creatorNotes",
+    "exampleMessages",
+],
+
 autoOpenSection: "greetings",
 };
 
@@ -435,28 +444,19 @@ if (exampleMessages && exampleMessages.trim()) {
     sections.exampleMessages = el;
 }
 
-// --------------------------------------
-// Insert sections in fixed natural order
-// --------------------------------------
-const naturalOrder = [
-    "description",
-    "greetings",
-    "scenario",
-    "personality",
-    "creatorNotes",
-    "exampleMessages"
-];
-
+const order = extensionSettings.sectionOrder;
 const visibility = extensionSettings.sectionsVisible;
 
-naturalOrder.forEach(id => {
+order.forEach(id => {
     if (visibility[id] && sections[id]) {
         body.appendChild(sections[id]);
+
         if (extensionSettings.autoOpenSection === id) {
             sections[id].open = true;
         }
     }
 });
+
 
 
     content.appendChild(body);
@@ -604,6 +604,70 @@ function applySettings() {
     root.style.setProperty('--cdp-responsive-breakpoint', `${extensionSettings.responsiveBreakpoint}px`);
 }
 
+// =====================================
+// Section Order UI (Move Up / Down)
+// =====================================
+
+function buildOrderUI() {
+    const container = document.getElementById("stcp-order-list");
+    if (!container) return;
+
+    const labels = {
+        description: "Description",
+        greetings: "Greetings",
+        scenario: "Scenario",
+        personality: "Personality",
+        creatorNotes: "Creator Notes",
+        exampleMessages: "Example Messages",
+    };
+
+    container.innerHTML = "";
+
+    extensionSettings.sectionOrder.forEach((id, index) => {
+        const row = document.createElement("div");
+        row.className = "stcp-order-item";
+
+        const label = document.createElement("div");
+        label.className = "stcp-order-label";
+        label.textContent = labels[id] || id;
+
+        const controls = document.createElement("div");
+        controls.className = "stcp-order-controls";
+
+        const up = document.createElement("button");
+        up.textContent = "↑";
+        up.className = "cdp-button cdp-button--secondary";
+        up.onclick = () => moveSection(index, -1);
+
+        const down = document.createElement("button");
+        down.textContent = "↓";
+        down.className = "cdp-button cdp-button--secondary";
+        down.onclick = () => moveSection(index, +1);
+
+        controls.appendChild(up);
+        controls.appendChild(down);
+
+        row.appendChild(label);
+        row.appendChild(controls);
+
+        container.appendChild(row);
+    });
+}
+
+function moveSection(index, direction) {
+    const order = extensionSettings.sectionOrder;
+    const newIndex = index + direction;
+
+    if (newIndex < 0 || newIndex >= order.length) return;
+
+    const temp = order[index];
+    order[index] = order[newIndex];
+    order[newIndex] = temp;
+
+    saveSettings();
+    buildOrderUI();
+}
+
 /**
  * Reset settings to defaults
  */
@@ -642,6 +706,7 @@ function resetSettings() {
     saveSettings();
     applySettings();
     updateSettingsUI();
+    buildOrderUI();
     log('Settings reset to defaults');
 }
 
