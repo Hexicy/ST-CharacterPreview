@@ -121,4 +121,38 @@
             </div>
         </div>
     </div>
+    <hr style="margin-top: 20px; margin-bottom: 15px;">
+
+<h3 style="margin-bottom: 10px;">Popup Content Sections</h3>
+
+<!-- Visibility toggles -->
+<div style="margin-left: 10px; margin-bottom: 15px;">
+    <label><input type="checkbox" id="stcp-show-description"> Description</label><br>
+    <label><input type="checkbox" id="stcp-show-greetings"> Greeting(s)</label><br>
+    <label><input type="checkbox" id="stcp-show-scenario"> Scenario</label><br>
+    <label><input type="checkbox" id="stcp-show-personality"> Personality</label><br>
+    <label><input type="checkbox" id="stcp-show-creatorNotes"> Creator Notes</label><br>
+    <label><input type="checkbox" id="stcp-show-exampleMessages"> Example Messages</label><br>
+</div>
+
+<!-- Auto-open selector -->
+<label style="font-weight: bold;">Auto-open Section:</label><br>
+<select id="stcp-auto-open" style="margin-top: 5px; margin-bottom: 15px;">
+    <option value="description">Description</option>
+    <option value="greetings">Greeting(s)</option>
+    <option value="scenario">Scenario</option>
+    <option value="personality">Personality</option>
+    <option value="creatorNotes">Creator Notes</option>
+    <option value="exampleMessages">Example Messages</option>
+</select>
+
+<!-- Ordering -->
+<h4 style="margin-top: 20px;">Section Order</h4>
+<div id="stcp-order-list" class="stcp-sortable-container" style="padding: 6px; border: 1px solid #666; border-radius: 5px;">
+    <!-- JS will populate this -->
+</div>
+
+<p style="opacity: 0.8; font-size: 0.9em; margin-top: 5px;">
+    Drag the items above to change the order.
+</p>
 </div>
