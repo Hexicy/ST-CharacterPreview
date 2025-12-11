@@ -58,16 +58,7 @@ let extensionSettings = {
     exampleMessages: true,
 },
 
-    sectionOrder: [
-    "description",
-    "greetings",
-    "scenario",
-    "personality",
-    "creatorNotes",
-    "exampleMessages"
-],
-
-autoOpenSection: "greetings",
+autoOpenSection: "creatorNotes",
 };
 
 /**
@@ -639,16 +630,7 @@ function resetSettings() {
             exampleMessages: true,
         },
 
-        sectionOrder: [
-            "description",
-            "greetings",
-            "scenario",
-            "personality",
-            "creatorNotes",
-            "exampleMessages"
-        ],
-
-        autoOpenSection: "greetings",
+        autoOpenSection: "creatorNotes",
     };
     saveSettings();
     applySettings();
